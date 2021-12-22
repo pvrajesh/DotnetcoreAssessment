@@ -60,11 +60,11 @@ namespace Fixture.Controllers
             catch (IOException iox)
             {
 
-                return StatusCode(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError);
+                return StatusCode(statuscodes.Status500InternalServerError);
             }
             catch(Exception ex)
             {
-                return StatusCode(Microsoft.AspNetCore.Http.StatusCodes.Status400BadRequest);
+                return StatusCode(statuscodes.Status400BadRequest);
 
             }
         }
@@ -90,12 +90,12 @@ namespace Fixture.Controllers
                     return Ok();
                 }
                 else
-                    return StatusCode(Microsoft.AspNetCore.Http.StatusCodes.Status422UnprocessableEntity);
+                    return StatusCode(statuscodes.Status422UnprocessableEntity);
             }
             catch (Exception ex)
             {
 
-                return StatusCode(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError);
+                return StatusCode(statuscodes.Status500InternalServerError);
 
             }
 
