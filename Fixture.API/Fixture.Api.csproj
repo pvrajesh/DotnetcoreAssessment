@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="5.0.9" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fixtre.Service\Fixture.Service.csproj" />
+    <ProjectReference Include="..\Fixture.Business\Fixture.Business.csproj" />
+    <ProjectReference Include="..\Fixture.Core\Fixture.Core.csproj" />
+    <ProjectReference Include="..\Fixture.Data\Fixture.Data.csproj" />
+  </ItemGroup>
+
+</Project>
