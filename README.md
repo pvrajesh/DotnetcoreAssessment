@@ -9,7 +9,8 @@
 4. Using Swagger for unit testing  
 
 **This is initial commit only, need to implement below functionalities**
-1. Validations
+~~1. Validations
 ~~ ~~2. Exception Handling
 ~~ ~~3. Model changes
-~~ ~~4. Use the DB if required
+~~ ~~4. Use the DB if required ~~
+Final commit is done, addde evidence of testing 
