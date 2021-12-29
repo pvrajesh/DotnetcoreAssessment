@@ -5,10 +5,15 @@ namespace Fixture.Core.Utils
 {
     public static class DataConversion
     {
-
-        public static Task<T> JsonToEntity<T>(JsonElement json)
+        /// <summary>
+        /// Convert the json to entity model
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static async Task<T> JsonToEntity<T>(JsonElement json)
         {
-            return Task.FromResult(JsonSerializer.Deserialize<T>(json.GetRawText()));
+            return await Task.FromResult( JsonSerializer.Deserialize<T>(json.GetRawText()));
         }
     }
 }

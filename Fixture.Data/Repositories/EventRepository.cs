@@ -20,16 +20,23 @@ namespace Fixture.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Event> GetEventByIdAsync(int id)
+        public async Task<Event> GetEventByIdAsync(int versionId,int payLoadId)
         {
             
             return await eventDbContext.Events               
-                .SingleOrDefaultAsync(m => DataConversion.JsonToEntity<Payload>(m.Payload).Id == id);
+                .SingleOrDefaultAsync(m =>m.Version == versionId && DataConversion.JsonToEntity<Payload>(m.Payload).GetAwaiter().GetResult().Id  == payLoadId);
+        }
+
+        public async Task<Event> GetEventByversionIdAsync(int versionId)
+        {
+
+            return await eventDbContext.Events
+                .SingleOrDefaultAsync(m => m.Version == versionId);
         }
 
         public async Task<Event> GetLatestEvent()
         {
-            return await eventDbContext.Events.OrderByDescending(m => DataConversion.JsonToEntity<Payload>(m.Payload).Id).SingleOrDefaultAsync();
+            return await eventDbContext.Events.OrderByDescending(m => m.Version).SingleOrDefaultAsync();
                 
         }
 

@@ -23,25 +23,51 @@ namespace Fixture.Services
 
        
 
+        /// <summary>
+        /// Get all events data includes meta data
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<Event>> GetAllWithMetaData()
         {
             return await _unitOfWork.Events
                 .GetAllWithMetadataAsync();
         }
 
-        public async Task<Event> GetEventById(int id)
+        /// <summary>
+        /// get event by version id and payload ID
+        /// </summary>
+        /// <param name="versionID"></param>
+        /// <param name="payloadId"></param>
+        /// <returns></returns>
+        public async Task<Event> GetEventById(int versionID, int payloadId)
         {
-            return await _unitOfWork.Events.GetEventByIdAsync(id);
+            return await _unitOfWork.Events.GetEventByIdAsync(versionID, payloadId);
                 
         }
 
+        public async Task<Event> GetEventByversionIdAsync(int versionID)
+        {
+            return await _unitOfWork.Events.GetEventByversionIdAsync(versionID);
+
+        }
+
+        /// <summary>
+        /// Get the latest event based on payload ID
+        /// </summary>
+        /// <returns></returns>
         public async Task<Event> GetLatestEvent()
         {
             return await _unitOfWork.Events.GetLatestEvent();
 
         }
 
-        public async Task UpdateEvent(Event eventToBeUpdated, Event existingEvent)
+        /// <summary>
+        /// Update the event markets based on exsting data 
+        /// </summary>
+        /// <param name="eventToBeUpdated"></param>
+        /// <param name="existingEvent"></param>
+        /// <returns></returns>
+        public async Task UpdateEventMarket(Event eventToBeUpdated, Event existingEvent)
         {
 
            var exstingPayload= await Fixture.Core.Utils.DataConversion.JsonToEntity<Payload>(existingEvent.Payload);
@@ -49,12 +75,20 @@ namespace Fixture.Services
 
             if(exstingPayload.Id == newPayload.Id)
             {
-                exstingPayload.Markets = newPayload.Markets;
+               
+                foreach (var item in newPayload.Markets)
+                {
+                   int itemFound= exstingPayload.Markets.FindIndex(mk => mk.Id == item.Id);
+
+                    if (itemFound >= 0)
+                    {
+                        exstingPayload.Markets[itemFound] = item;
+                    }
+                }
+                
                 existingEvent.Type = eventToBeUpdated.Type;
             }
             
-           
-
             await _unitOfWork.CommitAsync();
         }
     }

@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fixture.Api", "Fixture.API\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fixture.Service", "Fixtre.Service\Fixture.Service.csproj", "{BB120D31-4E40-4641-B0BB-7BBA9D980597}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fixture.Business", "Fixture.Business\Fixture.Business.csproj", "{3E84B524-AE93-4A52-A941-CDEDF5609804}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fixture.Business", "Fixture.Business\Fixture.Business.csproj", "{3E84B524-AE93-4A52-A941-CDEDF5609804}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fixture.ApiTests", "Fixture.ApiTests\Fixture.ApiTests.csproj", "{78F8B13D-CD18-4552-A4F0-13926F4C1A33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{3E84B524-AE93-4A52-A941-CDEDF5609804}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E84B524-AE93-4A52-A941-CDEDF5609804}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E84B524-AE93-4A52-A941-CDEDF5609804}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78F8B13D-CD18-4552-A4F0-13926F4C1A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78F8B13D-CD18-4552-A4F0-13926F4C1A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78F8B13D-CD18-4552-A4F0-13926F4C1A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78F8B13D-CD18-4552-A4F0-13926F4C1A33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

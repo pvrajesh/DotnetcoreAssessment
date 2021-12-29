@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Fixture.ApiTests": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

@@ -26,20 +26,22 @@ namespace Fixture.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
             
+            
+            // Using the in-memory SQl for this application to save event details 
             services.AddDbContext<EventDbContext>(options => options.UseInMemoryDatabase(databaseName: "EventDB") );
             services.AddTransient<IEventBusiness, EventBusiness>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IEventService, EventService>();
-            
+            services.AddTransient<IEventService,EventService>();
+
+            services.AddControllers().AddControllersAsServices();
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "My Event", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Fixture", Version = "v1" });
             });
 
-            //services.AddAutoMapper(typeof(Startup));
+            
 
         }
 
@@ -69,7 +71,7 @@ namespace Fixture.Api
             app.UseSwaggerUI(c =>
             {
                 c.RoutePrefix = "";
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Event V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Fixture V1");
             });
         }
     }

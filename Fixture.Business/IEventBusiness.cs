@@ -5,10 +5,10 @@ namespace Fixture.Business
 {
     public interface IEventBusiness
     {
-        Task<object> GetResult();
+        Task<object> GetResult(int versionID);
         Task<bool> UpdateMarket(Event newEvent);
 
-        Task<bool> CreateEvent(Event newEvent);
+        Task<Event> CreateEvent(Event newEvent);
 
 
     }

@@ -21,17 +21,14 @@ namespace Fixture.Business
 
         }
 
-        public async Task<bool> CreateEvent(Event newEvent)
+        public async Task<Event> CreateEvent(Event newEvent)
         {
             try
             {
+                
                 var newEventResult = await _eventService.CreateEvent(newEvent);
-
-                if (newEventResult.Payload.ValueKind != JsonValueKind.Null)
-                    return true;
-                else
-                    return false;
-            }
+                return newEventResult;
+             }
             catch (Exception ex)
             {
 
@@ -40,39 +37,58 @@ namespace Fixture.Business
           
         }
 
-        public async Task<object> GetResult()
+        public async Task<object> GetResult(int versionID)
         {
 
             try
             {
-                var savedData = await _eventService.GetLatestEvent();
-                if (savedData == null)
-                    return "No date present";
 
+                var result = new ResponseEvent();
+                result.Type = Enum.GetName(FuncationType.ResultFixture);
+                //Checking if any data presents if no then sending back empty winner class
+                var savedData = await _eventService.GetEventByversionIdAsync(versionID);
+                if (savedData == null)
+                {
+                   
+                    //Dynamically creating a winner object and retuning
+                    result.Payload = new ResponsePayload { Winners = new List<Winner>() };
+                    return result;
+                }
+                
+                
                 var payloadWithData = JsonSerializer.Deserialize<Payload>(savedData.Payload.ToString());
 
-                double minvalue = Double.MaxValue;
+
+                // Initializing the minvalue to find the list of winners 
+                double minValue = Double.MaxValue;
+
+                // initializing the winners list, this for when multiple teams participate in the game like triangle series
+                // or if both teams in same market value
                 List<Fixture.Core.Models.Market> winnersMark = new List<Fixture.Core.Models.Market>();
+
+
                 foreach (var mark in payloadWithData.Markets)
                 {
-                    if (mark.Price < minvalue)
+                    // current min value is less than the price then
+                    // updating minValue and clearing exsting winner
+                    // list and then to adding current value to winner list                   
+                    if (mark.Price < minValue)
                     {
-                        minvalue = mark.Price;
+                        minValue = mark.Price;
                         winnersMark.Clear();
                         winnersMark.Add(mark);
                     }
-                    else if (mark.Price == minvalue)
+                    else if (mark.Price == minValue)
                     {
                         winnersMark.Add(mark);
                     }
 
                 }
 
-                var result = new Event();
-                result.Type = Enum.GetName(FuncationType.ResultFixture);
+                               
                 result.Version = savedData.Version;
-               
-                return new { type = result.Type, payload = new { payloadWithData.Id, winners = winnersMark.Select(mar => new Winner() { Id = mar.Id }).ToList() } };
+                result.Payload = new ResponsePayload { Id = payloadWithData.Id, Winners = winnersMark.Select(mar => new Winner() { Id = mar.Id }).ToList() };
+                return result;
             }
             catch (Exception ex)
             {
@@ -83,24 +99,24 @@ namespace Fixture.Business
 
         }
 
-        public async Task<bool> UpdateMarket(Event updateEevent)
+        public async Task<bool> UpdateMarket(Event updateEvent)
         {
             try
             {
-                if (updateEevent.Type != Enum.GetName(FuncationType.UpdateFixture))
+                if (updateEvent.Type != Enum.GetName(FuncationType.UpdateFixture))
                     return false;
 
-                var updatePayload = JsonSerializer.Deserialize<Payload>(updateEevent.Payload.GetRawText());
+                var updatePayload = JsonSerializer.Deserialize<Payload>(updateEvent.Payload.GetRawText());
                 if (updatePayload.Markets != null)
                 {
-                    var savedData = await _eventService.GetEventById(updatePayload.Id);
-                    await _eventService.UpdateEvent(updateEevent, savedData);
+                    var savedData = await _eventService.GetEventById(updateEvent.Version, updatePayload.Id);
+                    await _eventService.UpdateEventMarket(updateEvent, savedData);
                     return true;
                 }
                 else
                     return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;

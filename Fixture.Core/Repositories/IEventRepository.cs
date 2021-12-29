@@ -7,7 +7,8 @@ namespace Fixture.Core.Repositories
     public interface IEventRepository : IRepository<Event>
     {
         Task<IEnumerable<Event>> GetAllWithMetadataAsync();
-        Task<Event> GetEventByIdAsync(int id);
+        Task<Event> GetEventByIdAsync(int versionId, int payLoadId);
+        Task<Event> GetEventByversionIdAsync(int versionId);
 
         Task<Event> GetLatestEvent();
 

@@ -1,0 +1,10 @@
+{
+    "type": "ResultFixture",
+    "version": 1,
+    "payload": {
+        "id": 300,
+        "winners": [{
+            "id": 2212
+        }]
+    }
+}
