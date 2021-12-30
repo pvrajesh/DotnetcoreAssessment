@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fixture.Business.Utils
 {
-    public enum FuncationType 
+    public enum FixtureType 
     {
         CreateFixture,
         UpdateFixture,

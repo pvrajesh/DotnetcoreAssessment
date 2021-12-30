@@ -38,7 +38,7 @@ namespace Fixture.Controllers
             }           
             catch (Exception ex)
             {
-                return Ok(statuscodes.Status400BadRequest);
+                return StatusCode(statuscodes.Status400BadRequest);
 
             }
         }
@@ -54,8 +54,8 @@ namespace Fixture.Controllers
                 if (ModelState.IsValid && eventPayload.Payload.ValueKind != JsonValueKind.Undefined)
                 {
 
-                    if (eventPayload.Type != Enum.GetName(FuncationType.CreateFixture))
-                        return Ok(statuscodes.Status400BadRequest);
+                    if (eventPayload.Type != Enum.GetName(FixtureType.CreateFixture))
+                        return StatusCode(statuscodes.Status400BadRequest);
 
                     //calling business layer to create event with payload
                     return Ok(await _eventBusiness.CreateEvent(eventPayload));
@@ -66,7 +66,7 @@ namespace Fixture.Controllers
             }
             catch(Exception ex)
             {
-                return Ok(statuscodes.Status400BadRequest);
+                return StatusCode(statuscodes.Status400BadRequest);
 
             }
         }
@@ -77,16 +77,19 @@ namespace Fixture.Controllers
         {
             try
             {
+             
                //validating the model and send backif any errors occured 
                 if (ModelState.IsValid && updateEvent.Payload.ValueKind != JsonValueKind.Undefined)
                 {
-                    if (updateEvent.Type != Enum.GetName(FuncationType.UpdateFixture))
-                        return Ok(statuscodes.Status400BadRequest);
+                    if (updateEvent.Type != Enum.GetName(FixtureType.UpdateFixture))
+                        return BadRequest();
 
                     if (await _eventBusiness.UpdateMarket(updateEvent))
-                        return Ok(statuscodes.Status200OK);
+                        return Ok();
                     else
-                        return Ok(statuscodes.Status422UnprocessableEntity);
+                        return UnprocessableEntity();
+
+
                 }
                 else
                     return ValidationProblem(ModelState);
@@ -94,7 +97,7 @@ namespace Fixture.Controllers
             catch (Exception ex)
             {
 
-                return Ok(statuscodes.Status500InternalServerError);
+                return StatusCode(statusCode: statuscodes.Status500InternalServerError); 
 
             }
 

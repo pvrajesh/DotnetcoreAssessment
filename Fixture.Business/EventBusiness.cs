@@ -44,7 +44,7 @@ namespace Fixture.Business
             {
 
                 var result = new ResponseEvent();
-                result.Type = Enum.GetName(FuncationType.ResultFixture);
+                result.Type = Enum.GetName(FixtureType.ResultFixture);
                 //Checking if any data presents if no then sending back empty winner class
                 var savedData = await _eventService.GetEventByversionIdAsync(versionID);
                 if (savedData == null)
@@ -103,7 +103,7 @@ namespace Fixture.Business
         {
             try
             {
-                if (updateEvent.Type != Enum.GetName(FuncationType.UpdateFixture))
+                if (updateEvent.Type != Enum.GetName(FixtureType.UpdateFixture))
                     return false;
 
                 var updatePayload = JsonSerializer.Deserialize<Payload>(updateEvent.Payload.GetRawText());

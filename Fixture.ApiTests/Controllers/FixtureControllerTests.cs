@@ -8,6 +8,8 @@ using System;
 using Fixture.Api;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
+using Fixture.Business.Utils;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Fixture.Controllers.Tests
 {
@@ -18,7 +20,7 @@ namespace Fixture.Controllers.Tests
         
         readonly IServiceProvider _services =
         Program.CreateWebHostBuilder(new string[] { }).Build().Services;
-        private string payloadPath = System.IO.Directory.GetCurrentDirectory() + "\\Payloads";
+        private string payloadPath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + "\\Payloads";
 
         [TestInitialize]
         public void FixtureControllerTest()
@@ -34,7 +36,7 @@ namespace Fixture.Controllers.Tests
         [TestMethod]
         public async Task PostTest()
         {
-            var createPayload = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + "\\Payloads\\01_create_fixture.json";
+            var createPayload = payloadPath+"\\01_create_fixture.json";
            
             var createInput = JsonSerializer.Deserialize<Event>(File.ReadAllText(createPayload));
             var returnedActionResult = await _controller.Post(createInput);
@@ -48,33 +50,50 @@ namespace Fixture.Controllers.Tests
         [TestMethod]
         public async Task PutTest()
         {
-            var updatePayload = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + "\\Payloads\\02_update_price.json";
-
+            var updatePayload = payloadPath + "\\02_update_price.json";
             var updateInput = JsonSerializer.Deserialize<Event>(File.ReadAllText(updatePayload));
-            var returnedActionResult = await _controller.Put(updateInput);
 
-            var okResult = returnedActionResult as OkObjectResult;
-          
+            var returnedActionResult = await _controller.Put(updateInput);       
 
-            Assert.IsTrue(okResult.StatusCode == 200);
+            var statusCodeResult = (IStatusCodeActionResult)returnedActionResult;
+
+            Assert.IsTrue(statusCodeResult.StatusCode == 200);
         }
 
 
         [TestMethod]
         public async Task Result()
         {
-
             var actionResult = await _controller.GetResult(1);
 
             var okResult = actionResult as OkObjectResult;
             var resultEvent = okResult.Value as ResponseEvent;
 
-            var resultPayload = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent + "\\Payloads\\03_result_fixture.json";
+            var resultPayload = payloadPath+"\\03_result_fixture.json";
+            var expectedEvent = JsonSerializer.Deserialize<ResponseEvent>(File.ReadAllText(resultPayload));
 
-            var  expectedEvent = JsonSerializer.Deserialize<ResponseEvent>(File.ReadAllText(resultPayload));
-          
             Assert.AreEqual(expectedEvent.Payload.Winners[0].Id, resultEvent.Payload.Winners[0].Id);
 
         }
+
+
+
+        [TestMethod]
+        public async Task Update_Fail()
+        {
+
+            var updatePayload = payloadPath+ "\\02_update_price.json";
+            var updateInput = JsonSerializer.Deserialize<Event>(File.ReadAllText(updatePayload));
+
+            //changing the type to other than update event
+            updateInput.Type = Enum.GetName(FixtureType.CreateFixture);
+            var returnedActionResult = await _controller.Put(updateInput);
+
+            var statusCodeResult = (IStatusCodeActionResult)returnedActionResult;            
+            Assert.IsTrue(statusCodeResult.StatusCode==400);   
+          
+
+        }
+
     }
 }
